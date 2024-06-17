@@ -1,0 +1,44 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/api/register":
+    post:
+      summary: Registers a new user
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '201':
+          description: registration successful
+        '422':
+          description: registration failed
+        '500':
+          description: token generation failed
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      example: user@example.com
+                    password:
+                      type: string
+                      example: password
+                  required:
+                  - email
+                  - password
+        required: true
+        description: User registration parameters
+servers:
+- url: https://{defaultHost}
+  variables:
+    defaultHost:
+      default: www.example.com

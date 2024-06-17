@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Defines the root path route ("/")
-  # root "articles#index"
+  mount Rswag::Ui::Engine => '/api-docs', as: 'rswag_ui'
+  mount Rswag::Api::Engine => '/api-docs', as: 'rswag_api'
+  namespace :api do
+    post '/register', to: 'authentication#register'
+  end
 end

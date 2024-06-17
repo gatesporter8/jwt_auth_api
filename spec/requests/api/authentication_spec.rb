@@ -40,6 +40,23 @@ describe 'Authentication API' do
           expect(data['data']).to have_key('jwt')
           expect(data['data']).to have_key('refresh_token')
         end
+
+        examples 'application/json' => {
+          request: {
+            user: {
+              email: 'newuser@example.com',
+              password: 'password123'
+            }
+          },
+          response: {
+            status: 'success',
+            message: 'Registration successful!',
+            data: {
+              jwt: 'generated_jwt_token',
+              refresh_token: 'generated_refresh_token'
+            }
+          }
+        }
       end
 
       response '422', 'registration failed' do
@@ -57,6 +74,22 @@ describe 'Authentication API' do
           expect(data['status']).to eq('error')
           expect(data['message']).to include('Registration failed!')
         end
+
+        examples 'application/json' => {
+          request: {
+            user: {
+              email: '',
+              password: 'password123'
+            }
+          },
+          response: {
+            status: 'error',
+            message: 'Registration failed!',
+            data: {
+              email: ["can't be blank"]
+            }
+          }
+        }
       end
 
       response '500', 'token generation failed' do
@@ -76,6 +109,20 @@ describe 'Authentication API' do
           expect(data['status']).to eq('error')
           expect(data['message']).to include('Token generation failed!')
         end
+        
+        examples 'application/json' => {
+          request: {
+            user: {
+              email: 'newuser@example.com',
+              password: 'password123'
+            }
+          },
+          response: {
+            status: 'error',
+            message: 'Token generation failed!',
+            data: 'Detailed error message'
+          }
+        }
       end
     end
   end

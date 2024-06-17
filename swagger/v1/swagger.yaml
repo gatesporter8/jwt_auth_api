@@ -13,10 +13,53 @@ paths:
       responses:
         '201':
           description: registration successful
+          content:
+            application/json:
+              examples:
+                example_0:
+                  value:
+                    request:
+                      user:
+                        email: newuser@example.com
+                        password: password123
+                    response:
+                      status: success
+                      message: Registration successful!
+                      data:
+                        jwt: generated_jwt_token
+                        refresh_token: generated_refresh_token
         '422':
           description: registration failed
+          content:
+            application/json:
+              examples:
+                example_0:
+                  value:
+                    request:
+                      user:
+                        email: ''
+                        password: password123
+                    response:
+                      status: error
+                      message: Registration failed!
+                      data:
+                        email:
+                        - can't be blank
         '500':
           description: token generation failed
+          content:
+            application/json:
+              examples:
+                example_0:
+                  value:
+                    request:
+                      user:
+                        email: newuser@example.com
+                        password: password123
+                    response:
+                      status: error
+                      message: Token generation failed!
+                      data: Detailed error message
       requestBody:
         content:
           application/json:

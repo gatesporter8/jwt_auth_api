@@ -18,8 +18,7 @@ class Api::TokensController < ApplicationController
   def refresh
     refresh_token = params[:refresh_token]
 
-    encrypted_refresh_token = RefreshToken.encrypt_token(refresh_token)
-    refresh_token_record = RefreshToken.find_by(encrypted_token: encrypted_refresh_token)
+    refresh_token_record = RefreshToken.find_by(token: refresh_token)
 
     if refresh_token_record.nil?
       return render_error_response(message: 'Invalid refresh token', data: nil, status: :unauthorized)

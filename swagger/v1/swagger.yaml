@@ -204,6 +204,47 @@ paths:
                       status: error
                       message: Invalid token
                       data: Error decoding token
+  "/api/token/refresh":
+    post:
+      summary: Refreshes a token
+      tags:
+      - Tokens
+      parameters: []
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              examples:
+                example_0:
+                  value:
+                    response:
+                      status: success
+                      message: Token refreshed successfully
+                      data:
+                        jwt: new_jwt
+                        refresh_token: new_refresh_token
+        '401':
+          description: Refresh token has expired
+          content:
+            application/json:
+              examples:
+                example_0:
+                  value:
+                    response:
+                      status: error
+                      message: Refresh token has expired
+                      data:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+              required:
+              - refresh_token
 servers:
 - url: https://{defaultHost}
   variables:

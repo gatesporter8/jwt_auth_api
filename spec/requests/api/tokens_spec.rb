@@ -99,4 +99,139 @@ describe 'Token Validation API' do
       end
     end
   end
+
+  path '/api/token/refresh' do
+    post 'Refreshes a token' do
+      tags 'Tokens'
+      consumes 'application/json'
+      produces 'application/json'
+      parameter name: :refresh_params, in: :body, schema: {
+        type: :object,
+        properties: {
+          refresh_token: { type: :string }
+        },
+        required: [ 'refresh_token' ]
+      }
+
+      response '200', 'Token refreshed successfully' do
+        let(:refresh_params) do
+          {
+            refresh_token: refresh_token
+          }
+        end
+        let(:refresh_token) { 'valid_refresh_token' }
+        let(:user) { create(:user) }
+        let(:refresh_token_record) { create(:refresh_token, token: refresh_token, user: user, revoked: false, expires_at: 1.day.from_now) }
+
+        before do
+          allow(RefreshToken).to receive(:find_by).with(token: 'valid_refresh_token').and_return(refresh_token_record)
+          allow(TokenService).to receive(:generate_tokens).with(user).and_return(['new_jwt', 'new_refresh_token'])
+        end
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['status']).to eq('success')
+          expect(data['message']).to eq('Token refreshed successfully')
+          expect(data['data']['jwt']).to eq('new_jwt')
+          expect(data['data']['refresh_token']).to eq('new_refresh_token')
+        end
+
+        examples 'application/json' => {
+          response: {
+            status: 'success',
+            message: 'Token refreshed successfully',
+            data: {
+              jwt: 'new_jwt',
+              refresh_token: 'new_refresh_token'
+            }
+          }
+        }
+      end
+
+      response '401', 'Invalid refresh token' do
+        let(:refresh_params) do
+          {
+            refresh_token: refresh_token
+          }
+        end
+        let(:refresh_token) { 'invalid_refresh_token' }
+
+        before do
+          allow(RefreshToken).to receive(:find_by).with(token: 'invalid_refresh_token').and_return(nil)
+        end
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['status']).to eq('error')
+          expect(data['message']).to eq('Invalid refresh token')
+        end
+
+        examples 'application/json' => {
+          response: {
+            status: 'error',
+            message: 'Invalid refresh token',
+            data: nil
+          }
+        }
+      end
+
+      response '401', 'Refresh token has been revoked' do
+        let(:refresh_params) do
+          {
+            refresh_token: refresh_token
+          }
+        end
+        let(:refresh_token) { 'revoked_refresh_token' }
+        let(:user) { create(:user) }
+        let(:refresh_token_record) { create(:refresh_token, token: refresh_token, user: user, revoked: true, expires_at: 1.day.from_now) }
+
+        before do
+          allow(RefreshToken).to receive(:find_by).with(token: 'revoked_refresh_token').and_return(refresh_token_record)
+        end
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['status']).to eq('error')
+          expect(data['message']).to eq('Refresh token has been revoked')
+        end
+
+        examples 'application/json' => {
+          response: {
+            status: 'error',
+            message: 'Refresh token has been revoked',
+            data: nil
+          }
+        }
+      end
+
+      response '401', 'Refresh token has expired' do
+        let(:refresh_params) do
+          {
+            refresh_token: refresh_token
+          }
+        end
+        let(:refresh_token) { 'expired_refresh_token' }
+        let(:user) { create(:user) }
+        let(:refresh_token_record) { create(:refresh_token, token: refresh_token, user: user, revoked: false, expires_at: 1.day.ago) }
+
+        before do
+          allow(RefreshToken).to receive(:find_by).with(token: 'expired_refresh_token').and_return(refresh_token_record)
+        end
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['status']).to eq('error')
+          expect(data['message']).to eq('Refresh token has expired')
+        end
+
+        examples 'application/json' => {
+          response: {
+            status: 'error',
+            message: 'Refresh token has expired',
+            data: nil
+          }
+        }
+      end
+    end
+  end
 end

@@ -22,13 +22,13 @@ class TokenService
     decoded_token[0]['user_id']
   rescue JWT::VerificationError => e
     Rails.logger.error("JWT verification failed: #{e.message}")
-    raise VerificationError, "Token signature verification failed!"
+    raise VerificationError, "Token signature verification failed"
   rescue JWT::ExpiredSignature => e
     Rails.logger.error("Access token has expired: #{e.message}")
-    raise ExpiredTokenError, "Access token has expired!"
+    raise ExpiredTokenError, "Access token has expired"
   rescue JWT::DecodeError => e
     Rails.logger.error("Error decoding token: #{e.message}")
-    raise DecodeError, "Error decoding token!"
+    raise DecodeError, "Error decoding token"
   end
 
   private

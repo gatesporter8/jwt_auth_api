@@ -102,7 +102,7 @@ describe 'Authentication API' do
           }
         end
 
-        before { allow(TokenService).to receive(:generate_tokens).and_raise(TokenService::TokenServiceTokenGenerationError) }
+        before { allow(TokenService).to receive(:generate_tokens).and_raise(TokenService::TokenGenerationError) }
 
         run_test! do |response|
           data = JSON.parse(response.body)
@@ -259,7 +259,7 @@ describe 'Authentication API' do
           }
         end
 
-        before { allow(TokenService).to receive(:generate_tokens).and_raise(TokenService::TokenServiceTokenGenerationError) }
+        before { allow(TokenService).to receive(:generate_tokens).and_raise(TokenService::TokenGenerationError) }
 
         run_test! do |response|
           data = JSON.parse(response.body)

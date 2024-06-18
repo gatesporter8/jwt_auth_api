@@ -2,10 +2,10 @@ class TokenService
   JWT_EXPIRATION_TIME = 10.minutes
   REFRESH_TOKEN_EXPIRATION_TIME = 15.days
 
-  class TokenServiceDecodeError < StandardError; end
-  class TokenServiceExpiredTokenError < StandardError; end
-  class TokenServiceVerificationError < StandardError; end
-  class TokenServiceTokenGenerationError < StandardError; end
+  class DecodeError < StandardError; end
+  class ExpiredTokenError < StandardError; end
+  class VerificationError < StandardError; end
+  class TokenGenerationError < StandardError; end
 
   def self.generate_tokens(user)
     jwt = generate_jwt(user)
@@ -14,7 +14,7 @@ class TokenService
     return jwt, refresh_token
   rescue StandardError => e
     Rails.logger.error("Error generating tokens: #{e.message}")
-    raise TokenServiceTokenGenerationError, "Error generating tokens!"
+    raise TokenGenerationError, "Error generating tokens!"
   end
 
   def self.decode_token(token)
@@ -22,13 +22,13 @@ class TokenService
     decoded_token[0]['user_id']
   rescue JWT::VerificationError => e
     Rails.logger.error("JWT verification failed: #{e.message}")
-    raise TokenServiceVerificationError, "Verification failed for access token!"
+    raise VerificationError, "Token signature verification failed!"
   rescue JWT::ExpiredSignature => e
     Rails.logger.error("Access token has expired: #{e.message}")
-    raise TokenServiceExpiredTokenError, "Access token has expired!"
+    raise ExpiredTokenError, "Access token has expired!"
   rescue JWT::DecodeError => e
     Rails.logger.error("Error decoding token: #{e.message}")
-    raise TokenServiceDecodeError, "Error decoding token!"
+    raise DecodeError, "Error decoding token!"
   end
 
   private

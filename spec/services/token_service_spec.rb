@@ -25,7 +25,7 @@ RSpec.describe TokenService do
       end
 
       it 'raises a TokenServiceTokenGenerationError' do
-        expect { described_class.generate_tokens(user) }.to raise_error(TokenService::TokenServiceTokenGenerationError)
+        expect { described_class.generate_tokens(user) }.to raise_error(TokenService::TokenGenerationError)
       end
     end
   end
@@ -43,7 +43,7 @@ RSpec.describe TokenService do
       let(:expired_jwt) { JWT.encode({ user_id: user.id, exp: 5.minutes.ago.to_i }, test_secret) }
 
       it 'raises a TokenServiceExpiredTokenError' do
-        expect { described_class.decode_token(expired_jwt) }.to raise_error(TokenService::TokenServiceExpiredTokenError)
+        expect { described_class.decode_token(expired_jwt) }.to raise_error(TokenService::ExpiredTokenError)
       end
     end
 
@@ -51,13 +51,13 @@ RSpec.describe TokenService do
       let(:invalid_jwt) { JWT.encode({ user_id: user.id }, 'wrong_secret') }
 
       it 'raises a TokenServiceVerificationError' do
-        expect { described_class.decode_token(invalid_jwt) }.to raise_error(TokenService::TokenServiceVerificationError)
+        expect { described_class.decode_token(invalid_jwt) }.to raise_error(TokenService::VerificationError)
       end
     end
 
     context 'when the token is malformed' do
       it 'raises a TokenServiceDecodeError' do
-        expect { described_class.decode_token('malformed.token') }.to raise_error(TokenService::TokenServiceDecodeError)
+        expect { described_class.decode_token('malformed.token') }.to raise_error(TokenService::DecodeError)
       end
     end
   end

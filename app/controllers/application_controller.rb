@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::API
-  rescue_from TokenService::TokenServiceTokenGenerationError, with: :handle_token_generation_error
+  rescue_from TokenService::TokenGenerationError, with: :handle_token_generation_error
 
   private
 

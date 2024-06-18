@@ -4,5 +4,7 @@ Rails.application.routes.draw do
   namespace :api do
     post '/register', to: 'authentication#register'
     post '/login', to: 'authentication#login'
+    post '/token/validate', to: 'tokens#validate'
+    post '/token/refresh', to: 'tokens#refresh'
   end
 end

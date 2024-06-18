@@ -169,6 +169,41 @@ paths:
                   - password
         required: true
         description: User login parameters
+  "/api/token/validate":
+    post:
+      summary: Validates a token
+      tags:
+      - Tokens
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        description: Authorization header with Bearer token
+        schema:
+          type: string
+      responses:
+        '200':
+          description: token is valid
+          content:
+            application/json:
+              examples:
+                example_0:
+                  value:
+                    response:
+                      status: success
+                      message: Token is valid
+                      data: {}
+        '401':
+          description: Invalid token
+          content:
+            application/json:
+              examples:
+                example_0:
+                  value:
+                    response:
+                      status: error
+                      message: Invalid token
+                      data: Error decoding token
 servers:
 - url: https://{defaultHost}
   variables:

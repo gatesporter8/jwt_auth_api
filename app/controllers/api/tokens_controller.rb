@@ -14,4 +14,29 @@ class Api::TokensController < ApplicationController
   rescue TokenService::DecodeError => e
     render_error_response(message: 'Invalid token', data: e.message, status: :unauthorized)
   end
+
+  def refresh
+    refresh_token = params[:refresh_token]
+
+    encrypted_refresh_token = RefreshToken.encrypt_token(refresh_token)
+    refresh_token_record = RefreshToken.find_by(encrypted_token: encrypted_refresh_token)
+
+    if refresh_token_record.nil?
+      return render_error_response(message: 'Invalid refresh token', data: nil, status: :unauthorized)
+    end
+
+    if refresh_token_record.revoked
+      return render_error_response(message: 'Refresh token has been revoked', data: nil, status: :unauthorized)
+    end
+
+    if refresh_token_record.expires_at < Time.now
+      return render_error_response(message: 'Refresh token has expired', data: nil, status: :unauthorized)
+    end
+
+    jwt, refresh_token = TokenService.generate_tokens(user)
+
+    response_data = { jwt:, refresh_token:}
+
+    render_success_response(message: 'Token refreshed successfully', data: response_data, status: :ok)
+  end
 end

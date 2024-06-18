@@ -68,6 +68,8 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
+    attr_encrypted (4.1.0)
+      encryptor (~> 3.0.0)
     base64 (0.2.0)
     bcrypt (3.1.20)
     bootsnap (1.18.3)
@@ -84,6 +86,7 @@ GEM
     dotenv-rails (3.1.2)
       dotenv (= 3.1.2)
       railties (>= 6.1)
+    encryptor (3.0.0)
     erubi (1.13.0)
     factory_bot (6.4.6)
       activesupport (>= 5.0.0)
@@ -216,6 +219,7 @@ PLATFORMS
   arm64-darwin-20
 
 DEPENDENCIES
+  attr_encrypted
   bcrypt (~> 3.1.7)
   bootsnap
   debug

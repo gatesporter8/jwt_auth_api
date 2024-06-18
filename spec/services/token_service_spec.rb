@@ -15,7 +15,8 @@ RSpec.describe TokenService do
         decoded_jwt = JWT.decode(jwt, test_secret).first
 
         expect(decoded_jwt['user_id']).to eq(user.id)
-        expect(RefreshToken.find_by(token: refresh_token).user_id).to eq(user.id)
+        found_refresh_token = RefreshToken.find_by_user_id(user.id)
+        expect(found_refresh_token.token).to eq(refresh_token)
       end
     end
 

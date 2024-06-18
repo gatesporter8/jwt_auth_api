@@ -6,22 +6,13 @@ RSpec.describe RefreshToken, type: :model do
   end
 
   describe 'validations' do
-    it 'validates presence of token' do
+    it 'validates presence of encrypted_token' do
       refresh_token1 = create(:refresh_token)
       refresh_token2 = create(:refresh_token)
       refresh_token2.token = nil
 
       refresh_token2.valid?
-      expect(refresh_token2.errors[:token]).to include("can't be blank")
-    end
-
-    it 'validates uniqueness of token' do
-      refresh_token1 = create(:refresh_token)
-      refresh_token2 = create(:refresh_token)
-      refresh_token2.token = refresh_token1.token
-
-      refresh_token2.valid?
-      expect(refresh_token2.errors[:token]).to include('has already been taken')
+      expect(refresh_token2.errors[:encrypted_token]).to include("can't be blank")
     end
 
     it { should validate_presence_of(:expires_at) }

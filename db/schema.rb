@@ -10,20 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_17_040949) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_18_053419) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "refresh_tokens", force: :cascade do |t|
-    t.string "token", null: false
+    t.string "encrypted_token", null: false
     t.boolean "revoked", default: false, null: false
     t.datetime "expires_at", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "encrypted_token_iv"
+    t.index ["encrypted_token"], name: "index_refresh_tokens_on_encrypted_token", unique: true
+    t.index ["encrypted_token_iv"], name: "index_refresh_tokens_on_encrypted_token_iv", unique: true
     t.index ["expires_at"], name: "index_refresh_tokens_on_expires_at"
     t.index ["revoked"], name: "index_refresh_tokens_on_revoked"
-    t.index ["token"], name: "index_refresh_tokens_on_token", unique: true
     t.index ["user_id"], name: "index_refresh_tokens_on_user_id"
   end
 

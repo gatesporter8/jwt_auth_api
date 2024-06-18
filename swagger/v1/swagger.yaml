@@ -80,6 +80,95 @@ paths:
                   - password
         required: true
         description: User registration parameters
+  "/api/login":
+    post:
+      summary: Logs in a user
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '200':
+          description: login successful
+          content:
+            application/json:
+              examples:
+                example_0:
+                  value:
+                    request:
+                      user:
+                        email: existinguser@example.com
+                        password: password123
+                    response:
+                      status: success
+                      message: Login successful!
+                      data:
+                        jwt: generated_jwt_token
+                        refresh_token: generated_refresh_token
+        '404':
+          description: user not found
+          content:
+            application/json:
+              examples:
+                example_0:
+                  value:
+                    request:
+                      user:
+                        email: nonexistent@example.com
+                        password: password123
+                    response:
+                      status: error
+                      message: User with email nonexistent@example.com not found!
+                      data:
+        '401':
+          description: invalid password
+          content:
+            application/json:
+              examples:
+                example_0:
+                  value:
+                    request:
+                      user:
+                        email: existinguser@example.com
+                        password: wrongpassword
+                    response:
+                      status: error
+                      message: Login failed! Invalid password
+                      data:
+        '500':
+          description: token generation failed
+          content:
+            application/json:
+              examples:
+                example_0:
+                  value:
+                    request:
+                      user:
+                        email: existinguser@example.com
+                        password: password123
+                    response:
+                      status: error
+                      message: Token generation failed!
+                      data: Detailed error message
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      example: user@example.com
+                    password:
+                      type: string
+                      example: password
+                  required:
+                  - email
+                  - password
+        required: true
+        description: User login parameters
 servers:
 - url: https://{defaultHost}
   variables:

@@ -4,15 +4,37 @@ class Api::AuthenticationController < ApplicationController
     if user.save
       jwt, refresh_token = TokenService.generate_tokens(user)
 
+      # NOTE: 
+      # If this application were interacting with a web browser, 
+      # we would want to store the refresh token in a secure HTTP cookie.
       response_data = { jwt:, refresh_token:}
 
-      # NOTE: if this were being used by a browser, we would want to set a secure cookie here for the refresh token
-      render json: { status: 'success', message: 'Registration successful!', data: response_data }, status: :created
+      render_success_response(message: 'Registration successful!', data: response_data, status: :created)
     else
-      render json: { status: 'error', message: 'Registration failed!', data: user.errors }, status: :unprocessable_entity
+      render_error_response(message: 'Registration failed!', data: user.errors, status: :unprocessable_entity)
     end
-  rescue TokenService::TokenServiceTokenGenerationError => e
-    render json: { status: 'error', message: 'Token generation failed!', data: e.message }, status: :internal_server_error
+  end
+
+  def login
+    user = User.find_by(email: user_params[:email])
+
+    unless user
+      return render_error_response(
+        message: "User with email #{user_params[:email]} not found!", 
+        data: nil, 
+        status: :not_found
+      )
+    end
+    
+    if user.authenticate(user_params[:password])
+      jwt, refresh_token = TokenService.generate_tokens(user)
+
+      response_data = { jwt: jwt, refresh_token: refresh_token }
+
+      render_success_response(message: 'Login successful!', data: response_data, status: :ok)
+    else
+      render_error_response(message: 'Login failed! Invalid password', data: nil, status: :unauthorized)
+    end
   end
 
   private

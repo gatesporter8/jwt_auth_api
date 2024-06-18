@@ -1,4 +1,5 @@
 class RefreshToken < ApplicationRecord
+  # encrypt the refresh token before saving it to the database in case an attacker gains access to the database
   attr_encrypted :token, key: [ENV['REFRESH_TOKEN_ENCRYPTION_KEY']].pack('H*')
   before_validation :generate_token, on: :create
 

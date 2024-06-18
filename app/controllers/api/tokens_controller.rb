@@ -29,7 +29,7 @@ class Api::TokensController < ApplicationController
     end
 
     if refresh_token_record.expires_at < Time.now
-      return render_error_response(message: 'Refresh token has expired', data: nil, status: :unauthorized)
+      return render_error_response(message: 'Refresh token has expired. You must login again.', data: nil, status: :unauthorized)
     end
 
     refresh_token_record.update(revoked: true)

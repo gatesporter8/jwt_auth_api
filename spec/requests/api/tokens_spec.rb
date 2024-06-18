@@ -221,13 +221,13 @@ describe 'Token Validation API' do
         run_test! do |response|
           data = JSON.parse(response.body)
           expect(data['status']).to eq('error')
-          expect(data['message']).to eq('Refresh token has expired')
+          expect(data['message']).to eq('Refresh token has expired. You must login again.')
         end
 
         examples 'application/json' => {
           response: {
             status: 'error',
-            message: 'Refresh token has expired',
+            message: 'Refresh token has expired. You must login again.',
             data: nil
           }
         }

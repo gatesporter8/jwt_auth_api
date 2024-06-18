@@ -6,5 +6,6 @@ Rails.application.routes.draw do
     post '/login', to: 'authentication#login'
     post '/token/validate', to: 'tokens#validate'
     post '/token/refresh', to: 'tokens#refresh'
+    get  '/widgets', to: 'widgets#index'
   end
 end

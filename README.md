@@ -24,7 +24,7 @@ I’m using Rspec, FactoryBot, and faker for my unit + request test suite. I’m
 
 ## Documentation
 
-Since this is an API, I’m also using the [rswag gem](https://github.com/rswag/rswag) for my request specs, which generates API documentation via `rake rswag:specs:swaggerize` that can be viewed at the /api-docs endpoint.
+Since this is an API, I’m also using the [rswag gem](https://github.com/rswag/rswag) for my request specs, which generates API documentation via `rake rswag:specs:swaggerize` that can be viewed at the `/api-docs` endpoint.
 
 <img width="1434" alt="Screenshot 2024-06-18 at 10 51 00 PM" src="https://github.com/gatesporter8/jwt_auth_api/assets/7433935/0a769223-b546-47e3-9361-0d89f6d84aa1">
 

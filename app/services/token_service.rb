@@ -1,5 +1,3 @@
-require 'pry'
-
 class TokenService
   JWT_EXPIRATION_TIME = 10.minutes
   REFRESH_TOKEN_EXPIRATION_TIME = 15.days

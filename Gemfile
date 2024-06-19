@@ -50,7 +50,6 @@ group :development, :test do
   gem 'rswag-api'
   gem 'rswag-ui'
   gem 'rswag-specs'
-  gem 'pry'
 end
 
 group :development do

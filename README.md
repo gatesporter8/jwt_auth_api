@@ -8,9 +8,9 @@ I'm using PostgreSQL to manage the users and refresh_tokens tables in my applica
 
 ## Token Management
 
-I'm using the [jwt gem](https://github.com/jwt/ruby-jwt), a popular library for encoding and decoding JWTs. I'm encapsulating all behavior from this gem in a service class called TokenService, which encodes/decodes tokens, and handles errors from the JWT gem by bubbling up its own TokenService errors that it defines. In a real app, this class could be fleshed out with more customized behavior and could function as the single source of truth for everything related to encoding and decoding JWTs.
+I'm using the [jwt gem](https://github.com/jwt/ruby-jwt), a popular library for encoding and decoding JWTs. I'm encapsulating all behavior from this gem in a service class called `TokenService`, which encodes/decodes tokens, and handles errors from the JWT gem by bubbling up its own `TokenService` errors that it defines. In a real app, this class could be fleshed out with more customized behavior and could function as the single source of truth for everything related to encoding and decoding JWTs.
 
-The TokenService class sets the expiration time of the JWT access tokens to 10 minutes, a short enough time that it reflects the short expiration periods JWTs typically have in the real world, but also long enough so we can play around with the functionality of the app without having to frequently hit the /refresh endpoint. For the refresh tokens, it sets the expiration time to 15 days, which reflects the longer expiration periods that refresh tokens have, allowing the user to request a new access token without having to login. Because of these longer expiration times, it is crucial that every effort is taken to keep refresh tokens secure, which I do by including the revoked column, encrypting the tokens when they are saved to Postgres, and not logging the tokens.
+The `TokenService` class sets the expiration time of the JWT access tokens to **10 minutes**, a short enough time that it reflects the short expiration periods JWTs typically have in the real world, but also long enough so we can play around with the functionality of the app without having to frequently hit the /api/refresh endpoint. For the refresh tokens, it sets the expiration time to **15 days**, which reflects the longer expiration periods that refresh tokens have, allowing the user to request a new access token without having to login. Because of these longer expiration times, it is crucial that every effort is taken to keep refresh tokens secure, which I do by including the revoked column, encrypting the tokens when they are saved to Postgres, and not logging the tokens.
 
 ## API Design
 
@@ -18,11 +18,11 @@ My controllers define a standard response structure for both error and success r
 
 ## Testing
 
-I’m using Rspec, FactoryBot, and faker for my unit + request test suite. I’m also using shoulda-matchers (https://github.com/thoughtbot/shoulda-matchers) for testing my models, since this gem simplifies the testing of validations and associations. 
+I’m using Rspec, FactoryBot, and faker for my unit + request test suite. I’m also using [shoulda-matchers](https://github.com/thoughtbot/shoulda-matchers) for testing my models, since this gem simplifies the testing of validations and associations. 
 
 ## Documentation
 
-Since this is an API, I’m also using the rswag gem (https://github.com/rswag/rswag) for my request specs, which generates API documentation via rake rswag:specs:swaggerize that can be viewed at the /api-docs endpoint.
+Since this is an API, I’m also using the [rswag gem](https://github.com/rswag/rswag) for my request specs, which generates API documentation via `rake rswag:specs:swaggerize` that can be viewed at the /api-docs endpoint.
 
 <img width="1434" alt="Screenshot 2024-06-18 at 10 51 00 PM" src="https://github.com/gatesporter8/jwt_auth_api/assets/7433935/0a769223-b546-47e3-9361-0d89f6d84aa1">
 

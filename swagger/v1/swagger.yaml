@@ -233,7 +233,7 @@ paths:
                   value:
                     response:
                       status: error
-                      message: Refresh token has expired
+                      message: Refresh token has expired. You must login again.
                       data:
       requestBody:
         content:
@@ -245,6 +245,47 @@ paths:
                   type: string
               required:
               - refresh_token
+  "/api/widgets":
+    get:
+      summary: Retrieves a list of widgets
+      tags:
+      - Widgets
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        description: Authorization header with Bearer token
+        schema:
+          type: string
+      responses:
+        '200':
+          description: widgets retrieved successfully
+          content:
+            application/json:
+              examples:
+                example_0:
+                  value:
+                    response:
+                      status: success
+                      message: Here is a list of widgets!
+                      data:
+                      - id: 1
+                        name: Foo
+                      - id: 2
+                        name: Bar
+                      - id: 3
+                        name: Baz
+        '401':
+          description: Invalid token
+          content:
+            application/json:
+              examples:
+                example_0:
+                  value:
+                    response:
+                      status: error
+                      message: Invalid token
+                      data: Error decoding token
 servers:
 - url: https://{defaultHost}
   variables:

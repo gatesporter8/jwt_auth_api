@@ -22,8 +22,6 @@ class Api::TokensController < ApplicationController
       return render_error_response(message: 'Refresh token has expired. You must login again.', data: nil, status: :unauthorized)
     end
 
-    refresh_token_record.update(revoked: true)
-
     jwt, new_refresh_token = TokenService.generate_tokens(refresh_token_record.user)
 
     response_data = { jwt:, refresh_token: new_refresh_token }

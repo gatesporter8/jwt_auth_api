@@ -34,5 +34,17 @@ RSpec.describe RefreshToken, type: :model do
       refresh_token.valid?
       expect(refresh_token.token).to be_present
     end
+
+    it 'revokes all active tokens for the user when a new token is created' do
+      user = create(:user)
+
+      old_token = create(:refresh_token, user: user, revoked: false)
+      new_token = create(:refresh_token, user: user)
+
+      old_token.reload
+
+      expect(old_token.revoked).to be true
+      expect(new_token.revoked).to be false
+    end
   end
 end
